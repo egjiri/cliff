@@ -23,7 +23,7 @@ type command struct {
 type flag struct {
 	Long, Short, Type, Description string
 	Default                        interface{}
-	Global                         bool
+	Global, Required               bool
 }
 
 type run struct {
@@ -170,39 +170,6 @@ func (c command) addArgs(cmd *cobra.Command) {
 					}
 				}
 				cmd.Args = cobra.RangeArgs(min, max)
-			}
-		}
-	}
-}
-
-func (c command) addFlags(cmd *cobra.Command) {
-	for _, flag := range c.Flags {
-		f := cmd.Flags()
-		if flag.Global {
-			f = cmd.PersistentFlags()
-		}
-		switch flag.Type {
-		case "string":
-			var defaultValue string
-			if flag.Default != nil {
-				defaultValue = flag.Default.(string)
-			}
-			switch flag.Short {
-			case "":
-				f.String(flag.Long, defaultValue, flag.Description)
-			default:
-				f.StringP(flag.Long, flag.Short, defaultValue, flag.Description)
-			}
-		case "boolean":
-			var defaultValue bool
-			if flag.Default != nil {
-				defaultValue = flag.Default.(bool)
-			}
-			switch flag.Short {
-			case "":
-				f.Bool(flag.Long, defaultValue, flag.Description)
-			default:
-				f.BoolP(flag.Long, flag.Short, defaultValue, flag.Description)
 			}
 		}
 	}
