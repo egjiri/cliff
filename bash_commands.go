@@ -40,6 +40,7 @@ func (c command) addRunWithBashCommands(cmd *cobra.Command) {
 
 func transformBashContent(content string, args []string, cmd *cobra.Command) string {
 	// Replace the content args placeholders with the values of the args
+	content = strings.Replace(content, "args...", strings.Join(args, " "), 1)
 	for i, arg := range args {
 		content = strings.Replace(content, fmt.Sprintf("args[%v]", i), arg, 1)
 	}
