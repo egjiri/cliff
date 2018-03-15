@@ -5,25 +5,27 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"regexp"
-	"strings"
 
-	ex "github.com/egjiri/go-utils/exec"
 	"github.com/spf13/cobra"
 	yaml "gopkg.in/yaml.v2"
 )
 
 type command struct {
-	Name, Short, Long, Run string
-	Args                   interface{}
-	Flags                  []flag
-	Commands               []command
+	Name, Short, Long string
+	Args              interface{}
+	Flags             []flag
+	Commands          []command
+	Run               []bashCommands
 }
 
 type flag struct {
 	Long, Short, Type, Description string
 	Default                        interface{}
 	Global, Required               bool
+}
+
+type bashCommands struct {
+	Heading, Setup, Execute string
 }
 
 type run struct {
@@ -98,7 +100,7 @@ func (c command) buildCommand() *cobra.Command {
 		Short: c.Short,
 		Long:  c.Long,
 	}
-	c.addRun(cmd)
+	c.addRunWithBashCommands(cmd)
 	c.addArgs(cmd)
 	c.addFlags(cmd)
 	c.addCommands(cmd)
@@ -109,37 +111,6 @@ func (c command) buildCommand() *cobra.Command {
 func (c command) addCommands(parentCmd *cobra.Command) {
 	for _, command := range c.Commands {
 		parentCmd.AddCommand(command.buildCommand())
-	}
-}
-
-func (c command) addRun(cmd *cobra.Command) {
-	if c.Run == "" {
-		return
-	}
-	cmd.Run = func(cc *cobra.Command, args []string) {
-		content := c.Run
-		// Replace the content args placeholders with the values of the args
-		for i, arg := range args {
-			content = strings.Replace(content, fmt.Sprintf("args[%v]", i), arg, 1)
-		}
-		// Replace the content flag placeholders with the values of the flags
-		matches := regexp.MustCompile("flags\\[\"(.+?)\"\\]").FindAllStringSubmatch(content, -1)
-		for _, match := range matches {
-			content = strings.Replace(content, match[0], cmd.Flag(match[1]).Value.String(), 1)
-		}
-		// Write the content to a bash file
-		tmpfile, err := ioutil.TempFile("", "cli")
-		defer os.Remove(tmpfile.Name()) // clean up
-		if err != nil {
-			log.Fatal(err)
-		}
-		if _, err := tmpfile.Write([]byte(content)); err != nil {
-			log.Fatal(err)
-		}
-		if err := tmpfile.Close(); err != nil {
-			log.Fatal(err)
-		}
-		ex.Execute("/bin/bash", tmpfile.Name())
 	}
 }
 
