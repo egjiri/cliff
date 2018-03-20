@@ -16,20 +16,23 @@ func (c command) addFlags(cmd *cobra.Command) {
 func (f *flag) setFlag(cmd *cobra.Command) {
 	ff := *f
 	cmdFlags := ff.cmdFlags(cmd)
-	switch ff.Type {
-	case "string":
-		switch ff.Short {
-		case "":
-			cmdFlags.String(ff.Long, f.stringValue(), ff.Description)
-		default:
+	if ff.Short != "" {
+		switch ff.Type {
+		case "string":
 			cmdFlags.StringP(ff.Long, ff.Short, f.stringValue(), ff.Description)
-		}
-	case "boolean":
-		switch ff.Short {
-		case "":
-			cmdFlags.Bool(ff.Long, f.boolValue(), ff.Description)
-		default:
+		case "boolean":
 			cmdFlags.BoolP(ff.Long, ff.Short, f.boolValue(), ff.Description)
+		case "integer":
+			cmdFlags.IntP(ff.Long, ff.Short, f.intValue(), ff.Description)
+		}
+	} else {
+		switch ff.Type {
+		case "string":
+			cmdFlags.String(ff.Long, f.stringValue(), ff.Description)
+		case "boolean":
+			cmdFlags.Bool(ff.Long, f.boolValue(), ff.Description)
+		case "integer":
+			cmdFlags.Int(ff.Long, f.intValue(), ff.Description)
 		}
 	}
 }
@@ -46,6 +49,14 @@ func (f *flag) boolValue() bool {
 	var defaultValue bool
 	if value := (*f).Default; value != nil {
 		defaultValue = value.(bool)
+	}
+	return defaultValue
+}
+
+func (f *flag) intValue() int {
+	var defaultValue int
+	if value := (*f).Default; value != nil {
+		defaultValue = value.(int)
 	}
 	return defaultValue
 }
