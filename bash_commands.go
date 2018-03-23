@@ -17,7 +17,8 @@ func (c command) addRunWithBashCommands(cmd *cobra.Command) {
 		return
 	}
 	cmd.Run = func(cc *cobra.Command, args []string) {
-		verbose := cmd.Flag("verbose").Value.String() == "true"
+		f := cmd.Flag("verbose")
+		verbose := f != nil && f.Value.String() == "true"
 		var content string
 		for _, run := range c.Run {
 			heading := transformBashContent(run.Heading, args, cmd)
@@ -47,7 +48,11 @@ func transformBashContent(content string, args []string, cmd *cobra.Command) str
 	// Replace the content flag placeholders with the values of the flags
 	matches := regexp.MustCompile("flags\\[\"(.+?)\"\\]").FindAllStringSubmatch(content, -1)
 	for _, match := range matches {
-		content = strings.Replace(content, match[0], cmd.Flag(match[1]).Value.String(), 1)
+		f := cmd.Flag(match[1])
+		if f == nil {
+			log.Fatalf("Error: Invalid flag \"%s\" used in command", match[1])
+		}
+		content = strings.Replace(content, match[0], f.Value.String(), 1)
 	}
 	return content
 }
