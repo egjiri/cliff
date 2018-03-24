@@ -64,7 +64,6 @@ func init() {
 
 func setupRootCmd() {
 	*rootCmd = *rootCommandFromConfigFile().buildCommand()
-	updateTemplates()
 }
 
 func attachRunToCommands() {
@@ -93,6 +92,7 @@ func (c command) buildCommand() *cobra.Command {
 	c.addArgs(cmd)
 	c.addFlags(cmd)
 	c.addCommands(cmd)
+	updateTemplates(cmd)
 	(*commands)[c.Name] = cmd
 	return cmd
 }
