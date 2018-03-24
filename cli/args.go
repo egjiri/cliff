@@ -2,7 +2,7 @@ package cli
 
 import "github.com/spf13/cobra"
 
-func (c command) addArgs(cmd *cobra.Command) {
+func (c Command) addArgs(cmd *cobra.Command) {
 	if num, ok := c.Args.(int); ok {
 		cmd.Args = cobra.ExactArgs(num)
 	} else {

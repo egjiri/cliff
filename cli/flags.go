@@ -5,7 +5,7 @@ import (
 	"github.com/spf13/pflag"
 )
 
-func (c command) addFlags(cmd *cobra.Command) {
+func (c Command) addFlags(cmd *cobra.Command) {
 	for _, flag := range c.Flags {
 		f := &flag
 		f.setFlag(cmd)

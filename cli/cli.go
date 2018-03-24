@@ -6,15 +6,21 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	yaml "gopkg.in/yaml.v2"
 )
 
-type command struct {
+type Command struct {
 	Name, Short, Long string
 	Args              interface{}
 	Flags             []flag
-	Commands          []command
+	Commands          []Command
 	Run               interface{}
+	cobraCmd          *cobra.Command
+}
+
+func (cmd Command) Flag(name string) *pflag.Flag {
+	return cmd.cobraCmd.Flag(name)
 }
 
 type flag struct {
@@ -29,7 +35,7 @@ type bashCommands struct {
 
 type run struct {
 	Name string
-	Run  func(cmd *cobra.Command, args []string)
+	Run  func(cmd Command, args []string)
 }
 
 var config = &[]byte{}
@@ -54,7 +60,7 @@ func Execute() {
 }
 
 // AddRunToCommand provies a mechanism to attach a Run function to a command
-func AddRunToCommand(name string, runFunc func(cmd *cobra.Command, args []string)) {
+func AddRunToCommand(name string, runFunc func(cmd Command, arg []string)) {
 	*runs = append(*runs, run{name, runFunc})
 }
 
@@ -69,20 +75,22 @@ func setupRootCmd() {
 func attachRunToCommands() {
 	for _, r := range *runs {
 		if cmd, ok := (*commands)[r.Name]; ok {
-			cmd.Run = r.Run
+			cmd.Run = func(cmd *cobra.Command, args []string) {
+				r.Run(Command{cobraCmd: cmd}, args)
+			}
 		}
 	}
 }
 
-func rootCommandFromConfigFile() *command {
-	var rootCommand command
+func rootCommandFromConfigFile() *Command {
+	var rootCommand Command
 	if err := yaml.Unmarshal(*config, &rootCommand); err != nil {
 		log.Fatal(err)
 	}
 	return &rootCommand
 }
 
-func (c command) buildCommand() *cobra.Command {
+func (c Command) buildCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   c.Name,
 		Short: c.Short,
@@ -97,7 +105,7 @@ func (c command) buildCommand() *cobra.Command {
 	return cmd
 }
 
-func (c command) addCommands(parentCmd *cobra.Command) {
+func (c Command) addCommands(parentCmd *cobra.Command) {
 	for _, command := range c.Commands {
 		parentCmd.AddCommand(command.buildCommand())
 	}

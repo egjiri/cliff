@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func (c command) addRunWithBashCommands(cmd *cobra.Command) {
+func (c Command) addRunWithBashCommands(cmd *cobra.Command) {
 	run := extractBashCommandsFromRun(c.Run)
 	if len(run) == 0 {
 		return
