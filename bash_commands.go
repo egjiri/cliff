@@ -13,17 +13,18 @@ import (
 )
 
 func (c command) addRunWithBashCommands(cmd *cobra.Command) {
-	if len(c.Run) == 0 {
+	run := extractBashCommandsFromRun(c.Run)
+	if len(run) == 0 {
 		return
 	}
 	cmd.Run = func(cc *cobra.Command, args []string) {
 		f := cmd.Flag("verbose")
 		verbose := f != nil && f.Value.String() == "true"
 		var content string
-		for _, run := range c.Run {
-			heading := transformBashContent(run.Heading, args, cmd)
-			bashSetup := transformBashContent(run.Setup, args, cmd)
-			bashCommand := transformBashContent(run.Execute, args, cmd)
+		for _, r := range run {
+			heading := transformBashContent(r.Heading, args, cmd)
+			bashSetup := transformBashContent(r.Setup, args, cmd)
+			bashCommand := transformBashContent(r.Execute, args, cmd)
 
 			content += fmt.Sprintf("%s\n", bashSetup)
 			if verbose && heading != "" {
@@ -70,4 +71,41 @@ func executeBash(content string) {
 		log.Fatal(err)
 	}
 	ex.Execute("/bin/bash", tmpfile.Name())
+}
+
+func extractBashCommandsFromRun(run interface{}) []bashCommands {
+	var bcs []bashCommands
+	// Create and return a bashCommand if run is a string
+	if exec, ok := run.(string); ok {
+		return append(bcs, bashCommands{Execute: exec})
+	}
+	// Build and return a slice otherwise
+	parts, ok := run.([]interface{})
+	if !ok {
+		return bcs
+	}
+	for _, part := range parts {
+		p, ok := part.(map[interface{}]interface{})
+		if !ok {
+			return bcs
+		}
+		var heading, setup, execute string
+		for k, v := range p {
+			val := v.(string)
+			switch k.(string) {
+			case "heading":
+				heading = val
+			case "setup":
+				setup = val
+			case "execute":
+				execute = val
+			}
+		}
+		bcs = append(bcs, bashCommands{
+			Heading: heading,
+			Setup:   setup,
+			Execute: execute,
+		})
+	}
+	return bcs
 }

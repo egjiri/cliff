@@ -14,7 +14,7 @@ type command struct {
 	Args              interface{}
 	Flags             []flag
 	Commands          []command
-	Run               []bashCommands
+	Run               interface{}
 }
 
 type flag struct {
