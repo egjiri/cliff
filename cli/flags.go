@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -11,6 +13,7 @@ func (c Command) addFlags(cmd *cobra.Command) {
 		f.setFlag(cmd)
 		f.markRequiredFlags(cmd)
 	}
+	addHelpFlag(cmd) // Add the help flag to each command
 }
 
 func (f *flag) setFlag(cmd *cobra.Command) {
@@ -78,4 +81,30 @@ func (f *flag) markRequiredFlags(cmd *cobra.Command) {
 			cmd.MarkFlagRequired(name)
 		}
 	}
+}
+
+func addHelpFlag(cmd *cobra.Command) {
+	if cmd.Flag("help") != nil {
+		return
+	}
+	(&flag{
+		Long:        "help",
+		Short:       "h",
+		Type:        "boolean",
+		Description: fmt.Sprintf("Help for %s", cmd.Name()),
+		Default:     false,
+	}).setFlag(cmd)
+}
+
+func addVerboseFlagToRootCmd() {
+	if rootCmd.Flag("verbose") != nil {
+		return
+	}
+	(&flag{
+		Long:        "verbose",
+		Type:        "boolean",
+		Description: "Verbosity of the logs",
+		Default:     false,
+		Global:      true,
+	}).setFlag(rootCmd)
 }

@@ -70,6 +70,7 @@ func init() {
 
 func setupRootCmd() {
 	*rootCmd = *rootCommandFromConfigFile().buildCommand()
+	addVerboseFlagToRootCmd()
 }
 
 func attachRunToCommands() {

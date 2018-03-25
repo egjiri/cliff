@@ -27,8 +27,10 @@ func (c Command) addRunWithBashCommands(cmd *cobra.Command) {
 			bashCommand := transformBashContent(r.Execute, args, cmd)
 
 			content += fmt.Sprintf("%s\n", bashSetup)
-			if verbose && heading != "" {
-				content += fmt.Sprintf("printf \"\n\033[0;32m%s...\033[m\n\"\n", heading)
+			if verbose {
+				if heading != "" {
+					content += fmt.Sprintf("printf \"\n\033[0;32m%s...\033[m\n\"\n", heading)
+				}
 				content += fmt.Sprintf("printf \"\033[0;34m==> \033[m\033[0;1m%s\033[m\n\"\n", bashCommand)
 			}
 			content += fmt.Sprintf("%s\n", bashCommand)
