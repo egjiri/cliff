@@ -35,3 +35,9 @@ commands:
 This is the output of running the `docker-compose` command
 
 ![Universal API Logo](docs/assets/output.png "Universal API Logo")
+
+## Development Setup
+1. Install the Go Programming Language. - [Install Instructions](https://golang.org/doc/install)
+2. Install the dep go depenendency manager `go get -u github.com/golang/dep/cmd/dep`
+3. Get the vendor packages `dep ensure`
+4. Install the go-bindata binary `go get -u github.com/jteeuwen/go-bindata/...`
