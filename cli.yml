@@ -20,16 +20,18 @@ commands:
     flags:
       - <<: *output
         description: Path of the output binary
-        default: /url/local/bin
-    run: echo build flags["output"]
+        default: /usr/local/bin
+    run:
+      - execute: go generate ./...
+      - setup: "CLI=$(cat cli.yml | grep ^name: | awk -F: '{ print $2 }' | sed 's/name://g' | tr -d '[[:space:]]')"
+        execute: go build -o flags["output"]/$CLI
   - name: bash-completion
     short: Create a bash completion file
     args: 0
     flags:
       - <<: *output
         description: Path of the output bash completion file
-        default: ~/.cliff_completion.sh
-    run: echo bash-completion flags["output"]
+        default: ~/.cliff-completion
   - name: package
     short: Zip a binary and bash completion files for sharing
     args: 0

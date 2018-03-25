@@ -2,26 +2,25 @@ package cli
 
 import (
 	"fmt"
-	"log"
-	"os"
 	"os/user"
+	"strings"
 )
 
-// GenerateBashCompletionFile ...
-func GenerateBashCompletionFile() {
+// GenerateBashCompletionFile creates the bash completion files,
+// saves it in the specified path, and prints instructions on how to use it
+func GenerateBashCompletionFile(path string) error {
+	if path == "" {
+		path = fmt.Sprintf("~/.%v-completion", rootCmd.Use)
+	}
 	usr, err := user.Current()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
-	if len(os.Args) < 2 {
-		log.Fatal("CLI name not specified!")
+	expandedPath := strings.Replace(path, "~", usr.HomeDir, 1)
+	if err := rootCmd.GenBashCompletionFile(expandedPath); err != nil {
+		return err
 	}
-	cliName := rootCmd.Use
-	path := fmt.Sprintf("%v/.%v-completion", usr.HomeDir, cliName)
-	if err := rootCmd.GenBashCompletionFile(path); err != nil {
-		log.Fatal(err)
-	}
-	path = fmt.Sprintf("~/.%v-completion", cliName)
 	snippet := fmt.Sprintf("if [ -f %v ]; then . %v; fi\n", path, path)
 	fmt.Printf("Bash completion script generated!\nAdd the following line to your .bash_profile:\n\n%v", snippet)
+	return nil
 }

@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 
@@ -48,6 +49,16 @@ func Configure(yamlConfigContent []byte) {
 	*config = yamlConfigContent
 	setupRootCmd()
 	attachRunToCommands()
+}
+
+// ConfigureFromFile reads the contented of a passed file path and then calls Configure with it
+func ConfigureFromFile(path string) error {
+	yamlConfigContent, err := ioutil.ReadFile(path)
+	if err != nil {
+		return err
+	}
+	Configure(yamlConfigContent)
+	return nil
 }
 
 // Execute adds all child commands to the root command sets flags appropriately.
