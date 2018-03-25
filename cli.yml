@@ -1,0 +1,44 @@
+definitions:
+  output: &output
+    long: output
+    short: o
+    type: string
+
+name: cliff
+long: Tool for the building CLIs through a single YAML config file
+flags:
+  - long: file
+    short: f
+    type: string
+    description: Specify an alternate config file
+    default: cli.yml
+    global: true
+commands:
+  - name: build
+    short: Build a cli binary
+    args: 0
+    flags:
+      - <<: *output
+        description: Path of the output binary
+        default: /url/local/bin
+    run: echo build flags["output"]
+  - name: bash-completion
+    short: Create a bash completion file
+    args: 0
+    flags:
+      - <<: *output
+        description: Path of the output bash completion file
+        default: ~/.cliff_completion.sh
+    run: echo bash-completion flags["output"]
+  - name: package
+    short: Zip a binary and bash completion files for sharing
+    args: 0
+    flags:
+      - <<: *output
+        description: Path of the output binary
+        default: cliff.zip
+    run: echo package flags["output"]
+  - name: scaffold
+    short: Generate an application scaffold to add custom Go commands
+    args: 0
+    run: echo scaffold
