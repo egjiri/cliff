@@ -5,7 +5,7 @@ definitions:
     type: string
 
 name: cliff
-long: Tool for the building CLIs through a single YAML config file
+short: Tool for the building CLIs through a single YAML config file
 flags:
   - long: file
     short: f

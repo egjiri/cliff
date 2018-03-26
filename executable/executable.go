@@ -8,11 +8,9 @@ import (
 )
 
 func init() {
-	if err := cli.ConfigureFromFile("cli.yml"); err != nil {
-		cli.Configure(data.MustAsset("../cli.yml"))
-	}
 	setupCustomCommands() // This must be run before Configure
 	cli.Configure(data.MustAsset("../cli.yml"))
+	cli.ConfigureSubcommandFromFile("cli.yml")
 }
 
 // Execute configures the CLI and executes the root command

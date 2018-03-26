@@ -59,6 +59,19 @@ func ConfigureFromFile(path string) error {
 	return nil
 }
 
+// ConfigureSubcommandFromFile reads a file, generates a command and attaches it to the root command as a subcommand
+func ConfigureSubcommandFromFile(path string) error {
+	yamlConfigContent, err := ioutil.ReadFile(path)
+	if err != nil {
+		return err
+	}
+	cmd := commandFromConfigFile(yamlConfigContent)
+	if rootCmd.Name() != cmd.Name {
+		(*rootCmd).AddCommand(cmd.buildCommand())
+	}
+	return nil
+}
+
 // Execute adds all child commands to the root command sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the RootCmd.
 func Execute() {
@@ -80,6 +93,7 @@ func init() {
 func setupRootCmd(config []byte) {
 	*rootCmd = *commandFromConfigFile(config).buildCommand()
 	addVerboseFlagToRootCmd()
+	rootCmd.SetHelpCommand(&cobra.Command{}) // Remove default help subcommand
 }
 
 func attachRunToCommands() {
