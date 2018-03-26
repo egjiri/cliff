@@ -39,15 +39,13 @@ type run struct {
 	Run  func(cmd Command, args []string)
 }
 
-var config = &[]byte{}
 var rootCmd = &cobra.Command{}
 var commands = &map[string]*cobra.Command{}
 var runs = &[]run{}
 
 // Configure sets the content of the yaml config file and sets up the commands
 func Configure(yamlConfigContent []byte) {
-	*config = yamlConfigContent
-	setupRootCmd()
+	setupRootCmd(yamlConfigContent)
 	attachRunToCommands()
 }
 
@@ -79,8 +77,8 @@ func init() {
 	log.SetFlags(0)
 }
 
-func setupRootCmd() {
-	*rootCmd = *rootCommandFromConfigFile().buildCommand()
+func setupRootCmd(config []byte) {
+	*rootCmd = *commandFromConfigFile(config).buildCommand()
 	addVerboseFlagToRootCmd()
 }
 
@@ -94,12 +92,12 @@ func attachRunToCommands() {
 	}
 }
 
-func rootCommandFromConfigFile() *Command {
-	var rootCommand Command
-	if err := yaml.Unmarshal(*config, &rootCommand); err != nil {
+func commandFromConfigFile(config []byte) *Command {
+	var command Command
+	if err := yaml.Unmarshal(config, &command); err != nil {
 		log.Fatal(err)
 	}
-	return &rootCommand
+	return &command
 }
 
 func (c Command) buildCommand() *cobra.Command {
