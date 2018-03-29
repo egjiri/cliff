@@ -99,10 +99,14 @@ func setupRootCmd(config []byte) {
 func attachRunToCommands() {
 	for _, r := range *runs {
 		if cmd, ok := (*commands)[r.Name]; ok {
-			cmd.Run = func(cmd *cobra.Command, args []string) {
-				r.Run(Command{cobraCmd: cmd}, args)
-			}
+			setRun(cmd, r.Run)
 		}
+	}
+}
+
+func setRun(cmd *cobra.Command, run func(cmd Command, arg []string)) {
+	cmd.Run = func(c *cobra.Command, args []string) {
+		run(Command{cobraCmd: c}, args)
 	}
 }
 
