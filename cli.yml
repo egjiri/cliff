@@ -21,10 +21,6 @@ commands:
       - <<: *output
         description: Path of the output binary
         default: /usr/local/bin
-    run:
-      - execute: go generate ./...
-      - setup: "CLI=$(cat cli.yml | grep ^name: | awk -F: '{ print $2 }' | sed 's/name://g' | tr -d '[[:space:]]')"
-        execute: go build -o flags["output"]/$CLI
   - name: bash-completion
     short: Create a bash completion file
     args: 0
