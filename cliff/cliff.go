@@ -1,8 +1,12 @@
 package cliff
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
+
+	"text/template"
 
 	"github.com/spf13/cobra"
 	yaml "gopkg.in/yaml.v2"
@@ -23,6 +27,8 @@ func init() {
 
 // Configure sets the content of the yaml config file and sets up the commands
 func Configure(yamlConfigContent []byte) {
+	yamlConfigContent = updateConfigWithData(yamlConfigContent)
+	fmt.Println(string(yamlConfigContent))
 	setupRootCmd(yamlConfigContent)
 	attachRunToCommands()
 }
@@ -69,6 +75,34 @@ func ConfigureAndExecute() {
 // AddRunToCommand provies a mechanism to attach a Run function to a command
 func AddRunToCommand(name string, runFunc func(c *Command)) {
 	runs[name] = runFunc
+}
+
+type Data struct {
+	Name    string
+	Content []byte
+}
+
+func (d Data) Write(p []byte) (n int, err error) {
+	d.Content = p
+	return len(p), nil
+}
+
+func (d Data) updateTemplate() []byte {
+	tmpl, err := template.New("config").Parse(string(d.Content))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("NAME: %#v", d)
+	err = tmpl.Execute(os.Stdout, d)
+	if err != nil {
+		panic(err)
+	}
+	return d.Content
+}
+
+// updateConfigWithData
+func updateConfigWithData(content []byte) []byte {
+	return Data{rootCmd.Name, content}.updateTemplate()
 }
 
 func setupRootCmd(config []byte) {

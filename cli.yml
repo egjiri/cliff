@@ -30,7 +30,7 @@ commands:
     flags:
       - <<: *output
         description: Path of the output bash completion file
-        default: ~/.cliff-completion
+        default: ~/.{{.Name}}-completion
   - name: package
     short: Zip a binary and bash completion files for sharing
     args: 0
