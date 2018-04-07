@@ -13,3 +13,5 @@ RUN go run .docker/main.go
 VOLUME /data
 
 CMD go-bindata -pkg data -o data/go-bindata.go -prefix=/data/ /data/cli.yml && go build -o /data/cliff
+
+LABEL image="egjiri/cliff:0.0.1"

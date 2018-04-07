@@ -23,7 +23,7 @@ func init() {
 			log.Fatal("Error: ", err)
 		}
 
-		command := fmt.Sprintf("docker run --rm -v %s:/data -e GOOS=%s egjiri/cliff", exPath, runtime.GOOS)
+		command := fmt.Sprintf("docker run --rm -v %s:/data -e GOOS=%s egjiri/cliff:0.0.1", exPath, runtime.GOOS)
 		ex.Execute(command)
 
 		newName := fmt.Sprintf("%s/%s", cmd.Flag("output").Value.String(), name())
