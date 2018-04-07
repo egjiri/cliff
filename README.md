@@ -1,3 +1,8 @@
+# WARNING!
+This project is still in early stages and with plenty of bugs. The config format might change as well as the public APIs which is why the documentation is currently at a minimum. Once all that has been finalized this warning will be removed and this tool/project can be used.
+
+---
+
 ![Universal API Logo](docs/assets/logo.png "Universal API Logo")
 
 ## Overview
