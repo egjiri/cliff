@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	filePath := "cli/cli.go"
+	filePath := "cliff/cliff.go"
 	if len(os.Args) > 1 {
 		filePath = os.Args[1]
 	}

@@ -7,7 +7,7 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/egjiri/cliff/cli"
+	"github.com/egjiri/cliff/cliff"
 	ex "github.com/egjiri/go-utils/exec"
 	yaml "gopkg.in/yaml.v2"
 )
@@ -17,7 +17,7 @@ type config struct {
 }
 
 func init() {
-	cli.AddRunToCommand("build", func(cmd cli.Command, args []string) {
+	cliff.AddRunToCommand("build", func(cmd cliff.Command, args []string) {
 		exPath, err := os.Getwd()
 		if err != nil {
 			log.Fatal("Error: ", err)

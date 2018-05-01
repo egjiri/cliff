@@ -1,4 +1,4 @@
-package cli
+package cliff
 
 import "github.com/spf13/cobra"
 

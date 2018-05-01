@@ -4,19 +4,19 @@ import (
 	"io/ioutil"
 	"log"
 
-	"github.com/egjiri/cliff/cli"
+	"github.com/egjiri/cliff/cliff"
 )
 
 func init() {
-	cli.AddRunToCommand("bash-completion", func(cmd cli.Command, args []string) {
+	cliff.AddRunToCommand("bash-completion", func(cmd cliff.Command, args []string) {
 		yamlConfigFilePath := cmd.Flag("file").Value.String()
 		yamlConfigContent, err := ioutil.ReadFile(yamlConfigFilePath)
 		if err != nil {
 			log.Fatal(err)
 		}
-		cli.Configure(yamlConfigContent)
+		cliff.Configure(yamlConfigContent)
 
 		outputPath := cmd.Flag("output").Value.String()
-		cli.GenerateBashCompletionFile(outputPath)
+		cliff.GenerateBashCompletionFile(outputPath)
 	})
 }
