@@ -81,6 +81,13 @@ func Execute() {
 	}
 }
 
+// ConfigureAndExecute runs ConfigureFromFile with default
+// locations for the yaml config file and then runs Execute
+func ConfigureAndExecute() {
+	ConfigureFromFile("cli.yml")
+	Execute()
+}
+
 // AddRunToCommand provies a mechanism to attach a Run function to a command
 func AddRunToCommand(name string, runFunc func(cmd Command, arg []string)) {
 	*runs = append(*runs, run{name, runFunc})

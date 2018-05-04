@@ -24,3 +24,10 @@ func GenerateBashCompletionFile(path string) error {
 	fmt.Printf("Bash completion script generated!\nAdd the following line to your .bash_profile:\n\n%v", snippet)
 	return nil
 }
+
+// ConfigureAndGenerateBashCompletionFile runs ConfigureFromFile with
+// default locations for the yaml config file and then runs Execute
+func ConfigureAndGenerateBashCompletionFile(path string) {
+	ConfigureFromFile("cli.yml")
+	GenerateBashCompletionFile(path)
+}
