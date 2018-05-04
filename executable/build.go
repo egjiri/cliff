@@ -23,11 +23,12 @@ func init() {
 			log.Fatal("Error: ", err)
 		}
 
-		command := fmt.Sprintf("docker run --rm -v %s:/data -e GOOS=%s egjiri/cliff:0.0.1", exPath, runtime.GOOS)
+		// TODO: Figure out best way of versioning the docker image instead of defaulting to latest
+		command := fmt.Sprintf("docker run --rm -v %s:/data -e GOOS_TARGET=%s -e REPO=%s egjiri/cliff", exPath, runtime.GOOS, args[0])
 		ex.Execute(command)
 
 		newName := fmt.Sprintf("%s/%s", cmd.Flag("output").Value.String(), name())
-		if err := os.Rename("cliff", newName); err != nil {
+		if err := os.Rename("cliff-binary", newName); err != nil {
 			log.Fatal("Error: ", err)
 		}
 		fmt.Println("Built binary:", newName)

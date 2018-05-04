@@ -16,11 +16,14 @@ flags:
 commands:
   - name: build
     short: Build a cli binary
-    args: 0
+    args: 1
     flags:
       - <<: *output
         description: Path of the output binary
         default: /usr/local/bin
+      - long: goos
+        type: string
+        description: Specify the environment where the binary will run. Ex. darwin, linux, windows, etc. It defaults to the current system
   - name: bash-completion
     short: Create a bash completion file
     args: 0

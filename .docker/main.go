@@ -8,11 +8,8 @@ import (
 )
 
 func main() {
-	filePath := "cliff/cliff.go"
-	if len(os.Args) > 1 {
-		filePath = os.Args[1]
-	}
-	modifyCliCode(filePath)
+	prefix := strings.Replace(os.Args[1], "github.com/egjiri/cliff/vendor/", "", 1)
+	modifyCliCode(prefix + "github.com/egjiri/cliff/cliff/cliff.go")
 }
 
 func modifyCliCode(filePath string) {
