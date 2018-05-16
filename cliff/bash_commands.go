@@ -46,7 +46,7 @@ func transformBashContent(content string, args []string, cmd *cobra.Command) str
 	// Replace the content args placeholders with the values of the args
 	content = strings.Replace(content, "args...", strings.Join(args, " "), 1)
 	for i, arg := range args {
-		content = strings.Replace(content, fmt.Sprintf("args[%v]", i), arg, 1)
+		content = strings.Replace(content, fmt.Sprintf("args[%v]", i), arg, -1)
 	}
 	// Replace the content flag placeholders with the values of the flags
 	matches := regexp.MustCompile("flags\\[\"(.+?)\"\\]").FindAllStringSubmatch(content, -1)
