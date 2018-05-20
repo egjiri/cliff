@@ -5,8 +5,8 @@ import (
 )
 
 func init() {
-	cliff.AddRunToCommand("bash-completion", func(cmd cliff.Command, args []string) {
-		outputPath := cmd.Flag("output").Value.String()
+	cliff.AddRunToCommand("bash-completion", func(c *cliff.Command) {
+		outputPath := c.Flag("output").String()
 		cliff.ConfigureAndGenerateBashCompletionFile(outputPath)
 	})
 }
