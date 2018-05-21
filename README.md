@@ -5,6 +5,8 @@ This project is still in early stages and with plenty of bugs. The config format
 
 ![Universal API Logo](docs/assets/logo.png "Universal API Logo")
 
+[![Build Status](https://travis-ci.com/egjiri/cliff.svg?branch=master)](https://travis-ci.com/egjiri/cliff)
+
 ## Overview
 🏔 **cliff** is a toolset which enables the creation of CLIs through a single YAML config file and no coding is required.
 
