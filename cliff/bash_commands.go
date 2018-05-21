@@ -21,15 +21,15 @@ func (c *CommandConfig) addRunWithBashCommands() {
 	if len(run) == 0 {
 		return
 	}
+	command := newCommand(c)
 	cmd := c.cobraCmd
 	cmd.Run = func(cc *cobra.Command, args []string) {
-		f := cmd.Flag("verbose")
-		verbose := f != nil && f.Value.String() == "true"
+		verbose := command.FlagBool("verbose")
 		var content string
 		for _, r := range run {
-			heading := transformBashContent(r.Heading, args, cmd)
-			bashSetup := transformBashContent(r.Setup, args, cmd)
-			bashCommand := transformBashContent(r.Execute, args, cmd)
+			heading := transformBashContent(r.Heading, args, command)
+			bashSetup := transformBashContent(r.Setup, args, command)
+			bashCommand := transformBashContent(r.Execute, args, command)
 
 			content += fmt.Sprintf("%s\n", bashSetup)
 			if verbose {
@@ -47,7 +47,7 @@ func (c *CommandConfig) addRunWithBashCommands() {
 	}
 }
 
-func transformBashContent(content string, args []string, cmd *cobra.Command) string {
+func transformBashContent(content string, args []string, c *Command) string {
 	// Replace the content args placeholders with the values of the args
 	content = strings.Replace(content, "args...", strings.Join(args, " "), 1)
 	for i, arg := range args {
@@ -56,11 +56,11 @@ func transformBashContent(content string, args []string, cmd *cobra.Command) str
 	// Replace the content flag placeholders with the values of the flags
 	matches := regexp.MustCompile("flags\\[\"(.+?)\"\\]").FindAllStringSubmatch(content, -1)
 	for _, match := range matches {
-		f := cmd.Flag(match[1])
+		f := c.flag(match[1])
 		if f == nil {
 			log.Fatalf("Error: Invalid flag \"%s\" used in command", match[1])
 		}
-		content = strings.Replace(content, match[0], f.Value.String(), 1)
+		content = strings.Replace(content, match[0], f.String(), 1)
 	}
 	return content
 }
