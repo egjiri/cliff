@@ -4,8 +4,11 @@
 [[projects]]
   branch = "master"
   name = "github.com/egjiri/go-utils"
-  packages = ["exec"]
-  revision = "c92d3c0bd9036e1151fa1fcf257738f2b25626db"
+  packages = [
+    "exec",
+    "testing"
+  ]
+  revision = "f488ab6ec75ff59bc63197ffbdbd9d505f2237f7"
 
 [[projects]]
   name = "github.com/fatih/color"
@@ -18,6 +21,18 @@
   packages = ["."]
   revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
   version = "v1.0"
+
+[[projects]]
+  name = "github.com/kr/pretty"
+  packages = ["."]
+  revision = "73f6ac0b30a98e433b289500d779f50c1a6f0712"
+  version = "v0.1.0"
+
+[[projects]]
+  name = "github.com/kr/text"
+  packages = ["."]
+  revision = "e2ffdb16a802fe2bb95e2e35ff34f0e53aeef34f"
+  version = "v0.1.0"
 
 [[projects]]
   name = "github.com/mattn/go-colorable"
@@ -58,6 +73,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "dd5a8ccf29b73462a7054abf7cfa536553025e9118a11fc3acf911cf0d2bc5c6"
+  inputs-digest = "5a462a909b29efdb31974b3109ded9889acc7a02807b5a658bcc674ed5a294c4"
   solver-name = "gps-cdcl"
   solver-version = 1

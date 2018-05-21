@@ -1,9 +1,11 @@
 package cliff
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -13,6 +15,7 @@ type flag struct {
 	Long, Short, Type, Description string
 	Default                        interface{}
 	Global, Required               bool
+	Enum                           []string
 	cobraFlag                      *pflag.Flag
 }
 
@@ -23,6 +26,9 @@ func (f *flag) String() string {
 			log.Fatal("No flag found!")
 		}
 		log.Fatalf("No flag \"%s\" found!\n", f.Long)
+	}
+	if err := f.validate(); err != nil {
+		log.Fatal(err)
 	}
 	return f.cobraFlag.Value.String()
 }
@@ -139,4 +145,24 @@ func addVerboseFlagToRootCmd() {
 		Default:     false,
 		Global:      true,
 	}).setFlag(rootCmd.cobraCmd)
+}
+
+// validate checks if the flag type is a string and if there are any enums set and
+// ensures that the flag value matches one of the enums otherwise it returns an error
+func (f *flag) validate() error {
+	if f.Type != "string" || len(f.Enum) == 0 {
+		return nil
+	}
+	val := f.cobraFlag.Value.String()
+	for _, validVal := range f.Enum {
+		if val == validVal {
+			return nil
+		}
+	}
+	options := fmt.Sprintf("[%v]", strings.Join(f.Enum, ", "))
+	errMsg := fmt.Sprintf("Invalid \"%s\" flag option: %s\nAvailable options are: %s\n", f.Long, val, options)
+	return errors.New(errMsg)
+	// ===== Sample Output =====
+	// Invalid "environment" flag option: testing
+	// Available options are: [development, staging, production]
 }
