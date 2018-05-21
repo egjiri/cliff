@@ -29,8 +29,21 @@ func (c *CommandConfig) buildCommand() *CommandConfig {
 	c.addFlags(cmd)
 	updateTemplates(cmd)
 	c.addchildren()
-	commands[c.Name] = c
+	c.addToCommands()
 	return c
+}
+
+func (c *CommandConfig) addToCommands() {
+	if c != rootCmd {
+		commands[c.key()] = c
+	}
+}
+
+func (c *CommandConfig) key() string {
+	if c.parent == nil || c.parent == rootCmd {
+		return c.Name
+	}
+	return c.parent.key() + "." + c.Name
 }
 
 func (c *CommandConfig) addchildren() {

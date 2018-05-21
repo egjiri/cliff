@@ -71,7 +71,8 @@ func AddRunToCommand(name string, runFunc func(c *Command)) {
 }
 
 func setupRootCmd(config []byte) {
-	rootCmd = commandFromConfigFile(config).buildCommand()
+	rootCmd = commandFromConfigFile(config)
+	rootCmd.buildCommand()
 	addVerboseFlagToRootCmd()
 	rootCmd.cobraCmd.SetHelpCommand(&cobra.Command{}) // Remove default help subcommand
 }
@@ -90,7 +91,7 @@ func attachRunToCommands() {
 			cc.cobraCmd.Run = func(_ *cobra.Command, args []string) {
 				c := newCommand(cc)
 				c.args = args
-				runs[c.Name](c)
+				runs[cc.key()](c)
 			}
 		}
 	}
