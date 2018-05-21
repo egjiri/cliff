@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/pflag"
 )
 
-type Flag struct {
+type flag struct {
 	Long, Short, Type, Description string
 	Default                        interface{}
 	Global, Required               bool
@@ -17,7 +17,7 @@ type Flag struct {
 }
 
 // String returns the string value of the flag
-func (f *Flag) String() string {
+func (f *flag) String() string {
 	if f == nil || f.cobraFlag == nil {
 		if f == nil {
 			log.Fatal("No flag found!")
@@ -28,7 +28,7 @@ func (f *Flag) String() string {
 }
 
 // Bool returns the bool value of the flag
-func (f *Flag) Bool() bool {
+func (f *flag) Bool() bool {
 	value, err := strconv.ParseBool(f.String())
 	if err != nil {
 		log.Fatal(err)
@@ -37,7 +37,7 @@ func (f *Flag) Bool() bool {
 }
 
 // Int returns the int value of the flag
-func (f *Flag) Int() int {
+func (f *flag) Int() int {
 	value, err := strconv.Atoi(f.String())
 	if err != nil {
 		log.Fatal(err)
@@ -45,7 +45,7 @@ func (f *Flag) Int() int {
 	return value
 }
 
-func (f *Flag) setFlag(cmd *cobra.Command) {
+func (f *flag) setFlag(cmd *cobra.Command) {
 	ff := *f
 	cmdFlags := ff.cmdFlags(cmd)
 	if ff.Short != "" {
@@ -70,7 +70,7 @@ func (f *Flag) setFlag(cmd *cobra.Command) {
 	f.cobraFlag = cmd.Flag(f.Long)
 }
 
-func (f *Flag) stringValue() string {
+func (f *flag) stringValue() string {
 	var defaultValue string
 	if value := (*f).Default; value != nil {
 		defaultValue = value.(string)
@@ -78,7 +78,7 @@ func (f *Flag) stringValue() string {
 	return defaultValue
 }
 
-func (f *Flag) boolValue() bool {
+func (f *flag) boolValue() bool {
 	var defaultValue bool
 	if value := (*f).Default; value != nil {
 		defaultValue = value.(bool)
@@ -86,7 +86,7 @@ func (f *Flag) boolValue() bool {
 	return defaultValue
 }
 
-func (f *Flag) intValue() int {
+func (f *flag) intValue() int {
 	var defaultValue int
 	if value := (*f).Default; value != nil {
 		defaultValue = value.(int)
@@ -94,14 +94,14 @@ func (f *Flag) intValue() int {
 	return defaultValue
 }
 
-func (f *Flag) cmdFlags(cmd *cobra.Command) *pflag.FlagSet {
+func (f *flag) cmdFlags(cmd *cobra.Command) *pflag.FlagSet {
 	if (*f).Global {
 		return cmd.PersistentFlags()
 	}
 	return cmd.Flags()
 }
 
-func (f *Flag) markRequiredFlags(cmd *cobra.Command) {
+func (f *flag) markRequiredFlags(cmd *cobra.Command) {
 	flag := *f
 	if flag.Required {
 		name := flag.Long
@@ -117,7 +117,7 @@ func addHelpFlag(cmd *cobra.Command) {
 	if cmd.Flag("help") != nil {
 		return
 	}
-	(&Flag{
+	(&flag{
 		Long:        "help",
 		Short:       "h",
 		Type:        "boolean",
@@ -127,10 +127,12 @@ func addHelpFlag(cmd *cobra.Command) {
 }
 
 func addVerboseFlagToRootCmd() {
-	if rootCmd.Flag("verbose") != nil {
-		return
+	for _, f := range rootCmd.Flags {
+		if f.Long == "verbose" {
+			return
+		}
 	}
-	(&Flag{
+	(&flag{
 		Long:        "verbose",
 		Type:        "boolean",
 		Description: "Verbosity of the logs",

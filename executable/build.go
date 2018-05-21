@@ -23,7 +23,7 @@ func init() {
 			log.Fatal("Error: ", err)
 		}
 
-		goos := c.Flag("goos").String()
+		goos := c.FlagString("goos")
 		if goos == "" {
 			goos = runtime.GOOS
 		}
@@ -31,7 +31,7 @@ func init() {
 		command := fmt.Sprintf("docker run --rm -v %s:/data -e GOOS_TARGET=%s -e REPO=%s egjiri/cliff", currentPath, goos, c.Arg(0))
 		ex.Execute(command)
 
-		newName := fmt.Sprintf("%s/%s", c.Flag("output").String(), name())
+		newName := fmt.Sprintf("%s/%s", c.FlagString("output"), name())
 		if err := os.Rename("cliff-binary", newName); err != nil {
 			log.Fatal("Error: ", err)
 		}

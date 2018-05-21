@@ -10,11 +10,11 @@ import (
 
 type run struct {
 	Name string
-	Run  func(c Command, args []string)
+	Run  func(c CommandConfig)
 }
 
-var rootCmd = &Command{}
-var commands = map[string]*Command{}
+var rootCmd = &CommandConfig{}
+var commands = map[string]*CommandConfig{}
 var runs = map[string]func(c *Command){}
 
 func init() {
@@ -76,8 +76,8 @@ func setupRootCmd(config []byte) {
 	rootCmd.cobraCmd.SetHelpCommand(&cobra.Command{}) // Remove default help subcommand
 }
 
-func commandFromConfigFile(config []byte) *Command {
-	var command Command
+func commandFromConfigFile(config []byte) *CommandConfig {
+	var command CommandConfig
 	if err := yaml.Unmarshal(config, &command); err != nil {
 		log.Fatal(err)
 	}
@@ -86,11 +86,11 @@ func commandFromConfigFile(config []byte) *Command {
 
 func attachRunToCommands() {
 	for name := range runs {
-		if c, ok := commands[name]; ok {
-			c.cobraCmd.Run = func(_ *cobra.Command, args []string) {
-				c.args = args // set args before runing the function
+		if cc, ok := commands[name]; ok {
+			cc.cobraCmd.Run = func(_ *cobra.Command, args []string) {
+				c := newCommand(cc)
+				c.args = args
 				runs[c.Name](c)
-				c.args = nil // Clear the args as they should not be part of the permanent command data
 			}
 		}
 	}
