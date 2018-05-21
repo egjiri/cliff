@@ -16,11 +16,12 @@ type bashCommands struct {
 	Heading, Setup, Execute string
 }
 
-func (c *CommandConfig) addRunWithBashCommands(cmd *cobra.Command) {
+func (c *CommandConfig) addRunWithBashCommands() {
 	run := extractBashCommandsFromRun(c.Run)
 	if len(run) == 0 {
 		return
 	}
+	cmd := c.cobraCmd
 	cmd.Run = func(cc *cobra.Command, args []string) {
 		f := cmd.Flag("verbose")
 		verbose := f != nil && f.Value.String() == "true"

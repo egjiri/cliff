@@ -17,26 +17,20 @@ type CommandConfig struct {
 	cobraCmd          *cobra.Command
 }
 
-func (c *CommandConfig) buildCommand() *CommandConfig {
+func (c *CommandConfig) configureCobraCommand() *CommandConfig {
 	cmd := &cobra.Command{
 		Use:   c.Name,
 		Short: c.Short,
 		Long:  c.Long,
 	}
 	c.cobraCmd = cmd
-	c.addRunWithBashCommands(cmd)
-	c.addArgs(cmd)
-	c.addFlags(cmd)
 	updateTemplates(cmd)
+	c.addRunWithBashCommands()
+	c.addArgs()
+	c.addFlags()
 	c.addchildren()
 	c.addToCommands()
 	return c
-}
-
-func (c *CommandConfig) addToCommands() {
-	if c != rootCmd {
-		commands[c.key()] = c
-	}
 }
 
 func (c *CommandConfig) key() string {
@@ -46,23 +40,8 @@ func (c *CommandConfig) key() string {
 	return c.parent.key() + "." + c.Name
 }
 
-func (c *CommandConfig) addchildren() {
-	for _, command := range c.Children {
-		command.buildCommand()
-		command.parent = c
-		c.cobraCmd.AddCommand(command.cobraCmd)
-	}
-}
-
-func (c *CommandConfig) addFlags(cmd *cobra.Command) {
-	for _, flag := range c.Flags {
-		flag.setFlag(cmd)
-		flag.markRequiredFlags(cmd)
-	}
-	addHelpFlag(cmd) // Add the help flag to each command
-}
-
-func (c *CommandConfig) addArgs(cmd *cobra.Command) {
+func (c *CommandConfig) addArgs() {
+	cmd := c.cobraCmd
 	if num, ok := c.Args.(int); ok {
 		cmd.Args = cobra.ExactArgs(num)
 	} else {
@@ -91,5 +70,28 @@ func (c *CommandConfig) addArgs(cmd *cobra.Command) {
 				cmd.Args = cobra.RangeArgs(min, max)
 			}
 		}
+	}
+}
+
+func (c *CommandConfig) addFlags() {
+	cmd := c.cobraCmd
+	for _, flag := range c.Flags {
+		flag.setFlag(cmd)
+		flag.markRequiredFlags(cmd)
+	}
+	addHelpFlag(cmd) // Add the help flag to each command
+}
+
+func (c *CommandConfig) addchildren() {
+	for _, command := range c.Children {
+		command.parent = c
+		command.configureCobraCommand()
+		c.cobraCmd.AddCommand(command.cobraCmd)
+	}
+}
+
+func (c *CommandConfig) addToCommands() {
+	if c != rootCmd {
+		commands[c.key()] = c
 	}
 }

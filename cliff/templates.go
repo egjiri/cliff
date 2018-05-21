@@ -5,13 +5,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func init() {
+	addTemplateFuncs()
+}
 func updateTemplates(cmd *cobra.Command) {
 	cmd.SetHelpTemplate(helpTemplate)
 	cmd.SetUsageTemplate(usageTemplate)
-}
-
-func init() {
-	addTemplateFuncs()
 }
 
 func addTemplateFuncs() {

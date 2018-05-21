@@ -44,8 +44,9 @@ func ConfigureSubcommandFromFile(path string) error {
 		return err
 	}
 	cmd := commandFromConfigFile(yamlConfigContent)
-	if rootCmd.Name != cmd.Name {
-		(*rootCmd.cobraCmd).AddCommand(cmd.buildCommand().cobraCmd)
+	cmd.configureCobraCommand()
+	if cmd.Name != rootCmd.Name {
+		rootCmd.cobraCmd.AddCommand(cmd.cobraCmd)
 	}
 	return nil
 }
@@ -72,7 +73,7 @@ func AddRunToCommand(name string, runFunc func(c *Command)) {
 
 func setupRootCmd(config []byte) {
 	rootCmd = commandFromConfigFile(config)
-	rootCmd.buildCommand()
+	rootCmd.configureCobraCommand()
 	addVerboseFlagToRootCmd()
 	rootCmd.cobraCmd.SetHelpCommand(&cobra.Command{}) // Remove default help subcommand
 }
