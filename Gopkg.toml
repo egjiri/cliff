@@ -1,6 +1,6 @@
 [[constraint]]
   branch = "master"
-  name = "github.com/egjiri/go-utils"
+  name = "github.com/egjiri/go-kit"
 
 [[constraint]]
   name = "github.com/fatih/color"

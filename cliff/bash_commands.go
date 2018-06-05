@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	ex "github.com/egjiri/go-utils/exec"
+	ex "github.com/egjiri/go-kit/exec"
 	"github.com/spf13/cobra"
 )
 

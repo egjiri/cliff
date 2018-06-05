@@ -3,7 +3,7 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/egjiri/go-utils"
+  name = "github.com/egjiri/go-kit"
   packages = [
     "exec",
     "testing"
@@ -73,6 +73,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "5a462a909b29efdb31974b3109ded9889acc7a02807b5a658bcc674ed5a294c4"
+  inputs-digest = "311db7413bcdf672c114813c70f8eeb29448f14610f36eb74a9d7c467e5ad21c"
   solver-name = "gps-cdcl"
   solver-version = 1

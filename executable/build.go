@@ -8,7 +8,7 @@ import (
 	"runtime"
 
 	"github.com/egjiri/cliff/cliff"
-	ex "github.com/egjiri/go-utils/exec"
+	ex "github.com/egjiri/go-kit/exec"
 	yaml "gopkg.in/yaml.v2"
 )
 

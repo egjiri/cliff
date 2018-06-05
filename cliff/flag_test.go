@@ -3,7 +3,7 @@ package cliff
 import (
 	"testing"
 
-	et "github.com/egjiri/go-utils/testing"
+	et "github.com/egjiri/go-kit/testing"
 )
 
 func Test_validate(t *testing.T) {
