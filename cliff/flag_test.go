@@ -7,35 +7,31 @@ import (
 )
 
 func Test_validate(t *testing.T) {
-	f := &flag{
-		Long: "environment",
-		Type: "string",
-		Enum: []string{"development", "staging", "production"},
+	type args struct {
+		value string
+		enums []string
 	}
-	et.Assert(t,
-		et.TestErr{
-			Name: "value present in enum",
-			Actual: func(f *flag) error {
-				f.cobraFlag = cobraFlag(f.Long, "development")
-				return f.validate()
-			}(f),
-			Expected: false,
-		},
-		et.TestErr{
-			Name: "value absent in enum",
-			Actual: func(f *flag) error {
-				f.cobraFlag = cobraFlag(f.Long, "testing")
-				return f.validate()
-			}(f),
-			Expected: true,
-		},
-		et.TestErr{
-			Name: "no enums",
-			Actual: func(f *flag) error {
-				f.Enum = []string{}
-				return f.validate()
-			}(f),
-			Expected: false,
-		},
-	)
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{"value present in enums", args{"development", []string{"development", "production"}}, false},
+		{"value absent in enums", args{"staging", []string{"development", "production"}}, true},
+		{"no enums everything valid", args{"development", []string{}}, false},
+	}
+	var testables []et.Testable
+	for _, test := range tests {
+		testables = append(testables, et.TestErr{
+			Name: test.name,
+			Actual: (&flag{
+				Long:      test.args.value,
+				Type:      "string",
+				Enum:      test.args.enums,
+				cobraFlag: cobraFlag("environment", test.args.value),
+			}).validate(),
+			Expected: test.wantErr,
+		})
+	}
+	et.Assert(t, testables...)
 }

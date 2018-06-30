@@ -78,7 +78,7 @@ func (f *flag) setFlag(cmd *cobra.Command) {
 
 func (f *flag) stringValue() string {
 	var defaultValue string
-	if value := (*f).Default; value != nil {
+	if value := f.Default; value != nil {
 		defaultValue = value.(string)
 	}
 	return defaultValue
@@ -86,7 +86,7 @@ func (f *flag) stringValue() string {
 
 func (f *flag) boolValue() bool {
 	var defaultValue bool
-	if value := (*f).Default; value != nil {
+	if value := f.Default; value != nil {
 		defaultValue = value.(bool)
 	}
 	return defaultValue
@@ -94,24 +94,23 @@ func (f *flag) boolValue() bool {
 
 func (f *flag) intValue() int {
 	var defaultValue int
-	if value := (*f).Default; value != nil {
+	if value := f.Default; value != nil {
 		defaultValue = value.(int)
 	}
 	return defaultValue
 }
 
 func (f *flag) cmdFlags(cmd *cobra.Command) *pflag.FlagSet {
-	if (*f).Global {
+	if f.Global {
 		return cmd.PersistentFlags()
 	}
 	return cmd.Flags()
 }
 
 func (f *flag) markRequiredFlags(cmd *cobra.Command) {
-	flag := *f
-	if flag.Required {
-		name := flag.Long
-		if flag.Global {
+	if f.Required {
+		name := f.Long
+		if f.Global {
 			cmd.MarkPersistentFlagRequired(name)
 		} else {
 			cmd.MarkFlagRequired(name)
