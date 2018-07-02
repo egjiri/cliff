@@ -24,7 +24,7 @@ func (c *CommandConfig) addRunWithBashCommands() {
 	command := newCommand(c)
 	cmd := c.cobraCmd
 	cmd.Run = func(cc *cobra.Command, args []string) {
-		verbose := command.FlagBool("verbose")
+		verbose := command.HasFlag("verbose") && command.FlagBool("verbose")
 		var content string
 		for _, r := range run {
 			heading := transformBashContent(r.Heading, args, command)

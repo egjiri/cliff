@@ -33,6 +33,12 @@ func (c *Command) FlagInt(name string) int {
 	return c.flag(name).Int()
 }
 
+// HasFlag returns a bool indicating the presence of a flag
+func (c *Command) HasFlag(name string) bool {
+	f := c.flag(name)
+	return f != nil && f.cobraFlag != nil
+}
+
 // newCommand create a new *Command with a name and config
 func newCommand(config *CommandConfig) *Command {
 	return &Command{
