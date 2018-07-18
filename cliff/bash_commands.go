@@ -2,13 +2,12 @@ package cliff
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
-	"os"
 	"regexp"
 	"strings"
 
 	ex "github.com/egjiri/go-kit/exec"
+	ui "github.com/egjiri/go-kit/ui/exec"
 	"github.com/spf13/cobra"
 )
 
@@ -34,16 +33,16 @@ func (c *CommandConfig) addRunWithBashCommands() {
 			content += fmt.Sprintf("%s\n", bashSetup)
 			if verbose {
 				if heading != "" {
-					content += fmt.Sprintf("printf \"\n\033[0;32m%s...\033[m\n\"\n", heading)
+					ui.Heading(heading)
 				}
-				content += fmt.Sprintf("printf \"\033[0;34m==> \033[m\033[0;1m%s\033[m\n\"\n", bashCommand)
+				ui.Command(bashCommand)
 			}
 			content += fmt.Sprintf("%s\n", bashCommand)
 		}
+		ex.ExecuteBash(content)
 		if verbose {
-			content += fmt.Sprintf("printf \"\n\033[0;32m%s\033[m\n\"\n", "Finished!")
+			ui.Finished()
 		}
-		executeBash(content)
 	}
 }
 
@@ -63,21 +62,6 @@ func transformBashContent(content string, args []string, c *Command) string {
 		content = strings.Replace(content, match[0], f.String(), 1)
 	}
 	return content
-}
-
-func executeBash(content string) {
-	tmpfile, err := ioutil.TempFile("", "cli")
-	defer os.Remove(tmpfile.Name()) // clean up
-	if err != nil {
-		log.Fatal(err)
-	}
-	if _, err := tmpfile.Write([]byte(content)); err != nil {
-		log.Fatal(err)
-	}
-	if err := tmpfile.Close(); err != nil {
-		log.Fatal(err)
-	}
-	ex.Execute("/bin/bash", tmpfile.Name())
 }
 
 func extractBashCommandsFromRun(run interface{}) []bashCommands {

@@ -6,9 +6,10 @@
   name = "github.com/egjiri/go-kit"
   packages = [
     "exec",
-    "testing"
+    "testing",
+    "ui/exec"
   ]
-  revision = "f488ab6ec75ff59bc63197ffbdbd9d505f2237f7"
+  revision = "aeda5fdaad384a1b85037e28f5c1512b3363ca87"
 
 [[projects]]
   name = "github.com/fatih/color"
