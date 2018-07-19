@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	ex "github.com/egjiri/go-kit/exec"
-	ui "github.com/egjiri/go-kit/ui/exec"
+	"github.com/egjiri/go-kit/ui/print"
 	"github.com/spf13/cobra"
 )
 
@@ -33,15 +33,15 @@ func (c *CommandConfig) addRunWithBashCommands() {
 			content += fmt.Sprintf("%s\n", bashSetup)
 			if verbose {
 				if heading != "" {
-					ui.Heading(heading)
+					print.Heading(heading)
 				}
-				ui.Command(bashCommand)
+				print.Command(bashCommand)
 			}
 			content += fmt.Sprintf("%s\n", bashCommand)
 		}
 		ex.ExecuteBash(content)
 		if verbose {
-			ui.Finished()
+			print.Finished()
 		}
 	}
 }

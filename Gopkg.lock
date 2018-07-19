@@ -7,9 +7,9 @@
   packages = [
     "exec",
     "testing",
-    "ui/exec"
+    "ui/print"
   ]
-  revision = "aeda5fdaad384a1b85037e28f5c1512b3363ca87"
+  revision = "b58a0f8bfa17a20e2a58ea09e8bebd9a23d05a7a"
 
 [[projects]]
   name = "github.com/fatih/color"
@@ -74,6 +74,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "311db7413bcdf672c114813c70f8eeb29448f14610f36eb74a9d7c467e5ad21c"
+  inputs-digest = "321a39be13307711c395a124fe144d84ea5db157aeccc66d554869ee22c6a12e"
   solver-name = "gps-cdcl"
   solver-version = 1
