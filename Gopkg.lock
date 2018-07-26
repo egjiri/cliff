@@ -2,7 +2,6 @@
 
 
 [[projects]]
-  branch = "master"
   name = "github.com/egjiri/go-kit"
   packages = [
     "exec",
@@ -10,6 +9,7 @@
     "ui/print"
   ]
   revision = "b58a0f8bfa17a20e2a58ea09e8bebd9a23d05a7a"
+  version = "v0.1.0"
 
 [[projects]]
   name = "github.com/fatih/color"
@@ -74,6 +74,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "321a39be13307711c395a124fe144d84ea5db157aeccc66d554869ee22c6a12e"
+  inputs-digest = "0cba14c25b75e6ac929b87496bceed1e955635fe4744f7414a305bb4ec442b6b"
   solver-name = "gps-cdcl"
   solver-version = 1
