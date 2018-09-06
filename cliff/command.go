@@ -10,6 +10,11 @@ type Command struct {
 	args   []string
 }
 
+// Args returns all the command arguments
+func (c *Command) Args() []string {
+	return c.args
+}
+
 // Arg returns the value of the argument as the specified index
 func (c *Command) Arg(index int) string {
 	if len(c.args) <= index {

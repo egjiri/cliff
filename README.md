@@ -3,7 +3,7 @@ This project is still in early stages and with plenty of bugs. The config format
 
 ---
 
-![Universal API Logo](docs/assets/logo.png "Universal API Logo")
+![Cliff Logo](docs/assets/logo.png "Cliff Logo")
 
 [![Build Status](https://travis-ci.com/egjiri/cliff.svg?branch=master)](https://travis-ci.com/egjiri/cliff)
 
@@ -41,7 +41,7 @@ commands:
 
 This is the output of running the `docker-compose` command
 
-![Universal API Logo](docs/assets/output.png "Universal API Logo")
+![Cliff Logo](docs/assets/output.png "Cliff Logo")
 
 ## Development Setup
 1. Install the Go Programming Language. - [Install Instructions](https://golang.org/doc/install)
