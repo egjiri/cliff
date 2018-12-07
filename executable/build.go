@@ -27,8 +27,12 @@ func init() {
 		if goos == "" {
 			goos = runtime.GOOS
 		}
+		goarch := c.FlagString("goarch")
+		if goarch == "" {
+			goarch = runtime.GOARCH
+		}
 		// TODO: Figure out best way of versioning the docker image instead of defaulting to latest
-		command := fmt.Sprintf("docker run --rm -v %s:/data -e GOOS_TARGET=%s -e REPO=%s egjiri/cliff", currentPath, goos, c.Arg(0))
+		command := fmt.Sprintf("docker run --rm -v %s:/data -e GOOS_TARGET=%s -e GOARCH_TARGET=%s -e REPO=%s egjiri/cliff", currentPath, goos, goarch, c.Arg(0))
 		ex.Execute(command)
 
 		newName := fmt.Sprintf("%s/%s", c.FlagString("output"), name())

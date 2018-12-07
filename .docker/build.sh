@@ -14,4 +14,4 @@ go-bindata -pkg data -o /go/src/github.com/egjiri/cliff/data/go-bindata.go cli.y
 go run /go/src/github.com/egjiri/cliff/.docker/main.go `pwd`/vendor/
 
 # Run the standard go build command to generate the binary
-GOOS=$GOOS_TARGET go build -o /data/cliff-binary
+GOOS=$GOOS_TARGET GOARCH=$GOARCH_TARGET go build -o /data/cliff-binary
