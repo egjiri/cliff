@@ -1,7 +1,4 @@
-FROM golang:1.10.0-alpine3.7 as builder
-
-# Install git
-RUN apk update && apk add git
+FROM golang:1.12.1 as builder
 
 # Install go-bindata
 RUN go get -u github.com/jteeuwen/go-bindata/...
@@ -17,6 +14,9 @@ ENV GOOS_TARGET=""
 
 # Specifity the GOARCH for the target binary. Ex. darwin, linux, windows, etc.
 ENV GOARCH_TARGET=""
+
+# Specifity the flags to the build command.
+ENV GOBUILD_FLAGS=""
 
 # Specifity the repository name of the project as it is referenced by Go import
 ENV REPO=""

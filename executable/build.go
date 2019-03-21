@@ -31,9 +31,12 @@ func init() {
 		if goarch == "" {
 			goarch = runtime.GOARCH
 		}
+		gobuildFlags := c.FlagString("gobuild-flags")
 		// TODO: Figure out best way of versioning the docker image instead of defaulting to latest
-		command := fmt.Sprintf("docker run --rm -v %s:/data -e GOOS_TARGET=%s -e GOARCH_TARGET=%s -e REPO=%s egjiri/cliff", currentPath, goos, goarch, c.Arg(0))
-		ex.Execute(command)
+		command := fmt.Sprintf("docker run --rm -v %s:/data -e GOOS_TARGET=%s -e GOARCH_TARGET=%s -e GOBUILD_FLAGS=\"%s\" -e REPO=%s egjiri/cliff", currentPath, goos, goarch, gobuildFlags, c.Arg(0))
+		if err := ex.Execute(command); err != nil {
+			log.Fatal("Error: ", err, "\n", command)
+		}
 
 		newName := fmt.Sprintf("%s/%s", c.FlagString("output"), name())
 		if err := os.Rename("cliff-binary", newName); err != nil {

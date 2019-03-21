@@ -27,6 +27,10 @@ commands:
       - long: goarch
         type: string
         description: Specify the architecture where the binary will run. Ex. arm, amd64, ppc, etc. It defaults to the current system
+      - long: gobuild-flags
+        type: string
+        default: -o=/data/cliff-binary
+        description: series of flags to be passed to the "go build" command
   - name: bash-completion
     short: Create a bash completion file
     args: 0
